@@ -1,0 +1,4 @@
+HOME_SOURCE=/home/hsp-user/users/npiga/singularity/ubuntu18.04/home
+HOME_TARGET=/home/hsp-user
+
+SINGULARITY_SHELL=/bin/bash singularity shell -B $HOME_SOURCE:$HOME_TARGET -B /tmp:/tmp --env PS1='\[\e[0;34m\][\u@ubuntu18.04]\$\[\e[0m\]:\[\033[01;32m\]\w\[\033[00m\]\[\033[00;36m\]' --writable --contain --nv ubuntu18.04
