@@ -1,2 +1,2 @@
 singularity build --fakeroot --sandbox ubuntu18.04 generate.def
-mkdir home
+mkdir -p home
