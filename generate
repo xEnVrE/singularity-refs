@@ -1,0 +1,1 @@
+singularity build --fakeroot --sandbox ubuntu18.04 generate.def
