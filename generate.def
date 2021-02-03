@@ -19,3 +19,12 @@ From: nvidia/cuda:10.0-devel-ubuntu18.04
   export LC_ALL=en_US.UTF-8
   export LANG=en_US.UTF-8
   export LANGUAGE=en_US.UTF-8
+
+  touch /etc/localtime
+  touch /usr/bin/nvidia-smi
+  touch /usr/bin/nvidia-debugdump
+  touch /usr/bin/nvidia-persistenced
+  touch /usr/bin/nvidia-cuda-mps-control
+  touch /usr/bin/nvidia-cuda-mps-server
+  mkdir -p /run/nvidia-persistenced
+  touch /run/nvidia-persistenced/socket
