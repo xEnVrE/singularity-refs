@@ -1,0 +1,4 @@
+HOME_SOURCE=/home/hsp-user/users/npiga/singularity/mitsuba/root
+HOME_TARGET=/root
+
+SINGULARITY_SHELL=/bin/bash singularity shell -B $HOME_SOURCE:$HOME_TARGET -B /tmp:/tmp --env PS1='\[\u@ubuntu18.04\]\$:\w# ' --fakeroot --writable --contain --nv ubuntu18.04
