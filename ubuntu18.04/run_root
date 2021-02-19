@@ -1,1 +1,9 @@
-SINGULARITY_SHELL=/bin/bash singularity shell -B /tmp:/tmp --env PS1='\[\u@ubuntu18.04\]\$:\w# ' --fakeroot --writable --contain --nv ubuntu18.04
+SINGULARITY_SHELL=/bin/bash \
+singularity shell \
+    -B /tmp:/tmp \
+    --env PS1='\u@ubuntu18.04:\w# ' \
+    --fakeroot \
+    --writable \
+    --contain \
+    --nv \
+    ubuntu18.04
