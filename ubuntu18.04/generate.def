@@ -29,7 +29,13 @@ From: nvidia/cuda:10.0-devel-ubuntu18.04
   apt install -y libsm6 libxi6 libxrender1 libxtst6 libx11-xcb-dev
 
   # install commonly used tools
-  apt install -y build-essential cmake cmake-curses-gui git htop iputils-ping wget
+  apt install -y build-essential git htop iputils-ping wget
+
+  # update CMake
+  apt install -y apt-transport-https ca-certificates gnupg software-properties-common
+  wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
+  apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main'
+  apt install -y cmake cmake-curses-gui
 
   # install commonly used editors
   apt install -y emacs-nox nano vim
@@ -39,7 +45,7 @@ From: nvidia/cuda:10.0-devel-ubuntu18.04
   install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
   sh -c 'echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
   apt update
-  apt install -y apt-transport-https code
+  apt install -y code
   mkdir -p /run/user/1000
 
   # (continued) pycharm-ce
