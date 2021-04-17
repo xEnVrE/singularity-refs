@@ -1,0 +1,82 @@
+BootStrap: docker
+From: nvidia/cuda:11.2.2-devel-ubuntu20.04
+
+%environment
+  # export locales
+  export LC_ALL=en_US.UTF-8
+  export LANG=en_US.UTF-8
+  export LANGUAGE=en_US.UTF-8
+
+  # export venvwrapper
+  export WORKON_HOME=/venvs
+  export VIRTUALENVWRAPPER_PYTHON='/usr/bin/python3'
+
+%post
+  # update package index from sources list
+  apt update
+
+  # force non-interactive setup of tzdata
+  DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends tzdata
+
+  # setup locales
+  apt install -y locales
+  echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+  locale-gen en_US.utf8
+  /usr/sbin/update-locale LANG=en_US.UTF-8
+
+  export LC_ALL=en_US.UTF-8
+  export LANG=en_US.UTF-8
+  export LANGUAGE=en_US.UTF-8
+
+  # these libraries are required to provide X11/GUI facilities to clients
+  apt install -y libsm6 libxi6 libxrender1 libxtst6 libx11-xcb-dev python3-tk
+
+  # install commonly used tools
+  apt install -y build-essential git htop iputils-ping wget
+
+  # update CMake
+  apt install -y apt-transport-https ca-certificates gnupg software-properties-common
+  wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
+  apt-add-repository 'deb https://apt.kitware.com/ubuntu/ focal main'
+  apt install -y cmake cmake-curses-gui
+
+  # install commonly used editors
+  apt install -y emacs-nox nano vim
+
+  # (continued) vscode
+  wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+  install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
+  sh -c 'echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+  apt update
+  apt install -y code
+  mkdir -p /run/user/1000
+
+  # (continued) pycharm-ce
+  wget https://download.jetbrains.com/python/pycharm-community-2020.3.3.tar.gz?_ga=2.51413417.1041878853.1613757440-1036511819.1613757440 -O /opt/pycharm.tar.gz
+  cd /opt
+  tar xzf pycharm.tar.gz
+  rm pycharm.tar.gz
+  mv pycharm-community-2020.3.3 pycharm
+
+  # python and virtualenvs
+  apt install -y python3 python3-pip
+  pip3 install virtualenvwrapper
+  mkdir /venvs
+  chmod 777 /venvs
+
+  # upgrade
+  apt upgrade -y
+
+  # create files required to interact with tools exposed by the NVIDIA driver on the host
+  touch /etc/localtime
+  touch /usr/bin/nvidia-smi
+  touch /usr/bin/nvidia-debugdump
+  touch /usr/bin/nvidia-persistenced
+  touch /usr/bin/nvidia-cuda-mps-control
+  touch /usr/bin/nvidia-cuda-mps-server
+  mkdir -p /run/nvidia-persistenced
+  touch /run/nvidia-persistenced/socket
+
+%runscript
+  # activate the venvwrapper
+  source /usr/local/bin/virtualenvwrapper.sh

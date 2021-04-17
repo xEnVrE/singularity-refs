@@ -1,0 +1,2 @@
+ls
+nvidia-smi
