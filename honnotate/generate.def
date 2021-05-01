@@ -88,9 +88,9 @@ From: nvidia/cudagl:10.0-devel-ubuntu18.04
   pip install -e .
 
   # force testing of dirt so that image generation fails if something went wrong
-  cd /dirt
   . /honnotate/bin/activate
-  python test/square_test.py
+  cd /dirt
+  python tests/square_test.py
 
 %runscript
   # activate the venvwrapper
