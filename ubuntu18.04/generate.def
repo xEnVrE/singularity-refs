@@ -15,6 +15,9 @@ From: nvidia/cuda:10.0-devel-ubuntu18.04
   # update package index from sources list
   apt update
 
+  # force non-interactive setup of tzdata
+  DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends tzdata
+
   # setup locales
   apt install -y locales
   echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
