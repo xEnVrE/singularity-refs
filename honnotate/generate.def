@@ -32,7 +32,7 @@ From: nvidia/cudagl:10.0-devel-ubuntu18.04
   apt install -y libsm6 libxi6 libxrender1 libxtst6 libx11-xcb-dev python3-tk
 
   # install commonly used tools
-  apt install -y build-essential git htop iputils-ping wget
+  apt install -y build-essential git htop iputils-ping wget unzip
 
   # install cudnn
   apt install -y --no-install-recommends libcudnn7 libcudnn7-dev
@@ -72,10 +72,7 @@ From: nvidia/cudagl:10.0-devel-ubuntu18.04
 
   # venv for HOnnotate
   virtualenv -p `which python3.7` honnotate
-  . /honnotate/bin/activate && pip install --upgrade pip && pip install numpy==1.19 matplotlib scikit-image transforms3d tqdm opencv-python cython open3d chumpy pyrender tensorflow-gpu==1.15
-
-  # clone honnotate
-  git clone https://github.com/shreyashampali/HOnnotate
+  . /honnotate/bin/activate && pip install --upgrade pip && pip install numpy==1.19 matplotlib scikit-image transforms3d tqdm opencv-python cython open3d chumpy pyrender tensorflow-gpu==1.15 pypng
 
   # clone dirt
   git clone https://github.com/pmh47/dirt.git
@@ -86,6 +83,35 @@ From: nvidia/cudagl:10.0-devel-ubuntu18.04
   make
   cd ..
   pip install -e .
+
+  # clone and configure honnotate
+  git clone https://github.com/mzramna/easy-google-drive-downloader.git
+  git clone https://github.com/shreyashampali/HOnnotate.git
+  git clone https://github.com/tensorflow/models.git
+  cd /models
+  git checkout 834902277b8d9d38ef9982180aadcdaa0e5d24d3
+  cp -r research/deeplab/ research/slim/  ../HOnnotate/models/
+  cd /HOnnotate
+  wget https://files.icg.tugraz.at/f/f23053e075a140ca8756/?dl=1 -O checkpoints.zip
+  wget https://files.icg.tugraz.at/f/b400540c6c81425e8978/?dl=1 -O objCorners.zip
+  wget https://files.icg.tugraz.at/f/1a55e8134bda4dd7938d/?dl=1 -O test.zip
+  ../easy-google-drive-downloader/download_google_drive_file.sh https://drive.google.com/file/d/1gmcDD-5bkJfcMKLZb3zGgH_HUFbulQWu/view?usp=sharing
+  mkdir -p test/test
+  unzip checkpoints.zip -d checkpoints
+  unzip objCorners.zip
+  unzip YCB_Video_Models.zip -d YCB_Video_Models
+  unzip test.zip -d test/test
+  rm *.zip
+  echo "import os" > HOdatasets/mypaths.py
+  echo "" >> HOdatasets/mypaths.py
+  echo "HO3D_MULTI_CAMERA_DIR = '/HOnnotate/test'" >> HOdatasets/mypaths.py
+  echo "" >> HOdatasets/mypaths.py
+  echo "YCB_MODELS_DIR = '/HOnnotate/YCB_Video_Models/models/'" >> HOdatasets/mypaths.py
+  echo "" >> HOdatasets/mypaths.py
+  echo "YCB_OBJECT_CORNERS_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../objCorners')" >> HOdatasets/mypaths.py
+  echo "" >> HOdatasets/mypaths.py
+  echo "MANO_MODEL_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../optimization/mano/models/MANO_RIGHT.pkl')" >> HOdatasets/mypaths.py
+
 
 %runscript
   # activate the venvwrapper
