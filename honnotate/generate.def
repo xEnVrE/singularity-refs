@@ -1,0 +1,82 @@
+BootStrap: docker
+From: nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04
+
+%environment
+  # export locales
+  export LC_ALL=en_US.UTF-8
+  export LANG=en_US.UTF-8
+  export LANGUAGE=en_US.UTF-8
+
+  # export venvwrapper
+  export WORKON_HOME=/venvs
+  export VIRTUALENVWRAPPER_PYTHON='/usr/bin/python3'
+
+%post
+  # update package index from sources list
+  apt update
+
+  # force non-interactive setup of tzdata
+  DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends tzdata
+
+  # setup locales
+  apt install -y locales
+  echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+  locale-gen en_US.utf8
+  /usr/sbin/update-locale LANG=en_US.UTF-8
+
+  export LC_ALL=en_US.UTF-8
+  export LANG=en_US.UTF-8
+  export LANGUAGE=en_US.UTF-8
+
+  # these libraries are required to provide X11/GUI facilities to clients
+  apt install -y libsm6 libxi6 libxrender1 libxtst6 libx11-xcb-dev python3-tk
+
+  # install commonly used tools
+  apt install -y build-essential git htop iputils-ping wget
+
+  # update CMake
+  apt install -y apt-transport-https ca-certificates gnupg software-properties-common
+  wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
+  apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main'
+  apt install -y cmake cmake-curses-gui
+
+  # install commonly used editors
+  apt install -y emacs-nox nano vim
+
+  # python and virtualenvs
+  apt install -y python3 python3-pip
+  pip3 install virtualenvwrapper
+  mkdir /venvs
+  chmod 777 /venvs
+
+  # upgrade
+  apt upgrade -y
+
+  # create files required to interact with tools exposed by the NVIDIA driver on the host
+  touch /etc/localtime
+  touch /usr/bin/nvidia-smi
+  touch /usr/bin/nvidia-debugdump
+  touch /usr/bin/nvidia-persistenced
+  touch /usr/bin/nvidia-cuda-mps-control
+  touch /usr/bin/nvidia-cuda-mps-server
+  mkdir -p /run/nvidia-persistenced
+  touch /run/nvidia-persistenced/socket
+
+  # venv
+  virtualenv honnotate
+  . honnotate/bin/activate
+  pip install --upgrade pip
+
+  # requirements for HOnnotate
+  pip install numpy matplotlib scikit-image transforms3d tqdm opencv-python cython open3d chumpy pyrender tensorflow-gpu==1.15
+
+  # clone honnotate
+  git clone https://github.com/shreyashampali/HOnnotate
+
+  # clone dirt and install requirements
+  apt install -y libgl1-mesa-dev libegl1-mesa-dev
+  git clone https://github.com/pmh47/dirt.git
+
+%runscript
+  # activate the venvwrapper
+  source /usr/local/bin/virtualenvwrapper.sh
