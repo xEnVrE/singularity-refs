@@ -38,7 +38,7 @@ From: nvidia/cuda:11.2.2-devel-ubuntu20.04
   apt install -y libsm6 libxi6 libxrender1 libxtst6 libx11-xcb-dev python3-tk
 
   # install commonly used tools
-  apt install -y build-essential git htop iputils-ping wget
+  apt install -y build-essential git htop iputils-ping wget pybind11-dev
 
   # update CMake
   apt install -y apt-transport-https ca-certificates gnupg software-properties-common
