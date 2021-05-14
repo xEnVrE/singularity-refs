@@ -85,7 +85,6 @@ From: nvidia/cuda:11.2.2-devel-ubuntu20.04
   cd build
   cmake -DENABLE_FAST_MATH=ON -DOPENCV_ENABLE_NONFREE=ON -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules/ -DWITH_TBB=ON -DBUILD_PERF_TESTS=OFF -DBUILD_TESTS=OFF -DOPENCV_DNN_CUDA=OFF -DWITH_CUDA=ON -DWITH_CUDNN=OFF -DCUDA_FAST_MATH=ON -DWITH_GTK_2_X=ON -DCUDA_GENERATION=Ampere ../
   make -j10
-  cd -
 
   # robotology superbuild (until we require YARP support)
   git config --global user.name "user"
@@ -101,7 +100,7 @@ From: nvidia/cuda:11.2.2-devel-ubuntu20.04
   cd build
   cmake -DCMAKE_INSTALL_PREFIX=/src/ycm/build/install ../
   make install
-  export YCM_DIR=/src/ycb/build
+  export YCM_DIR=/src/ycm/build
 
   cd /src
   git clone https://github.com/robotology/robotology-superbuild
@@ -123,6 +122,7 @@ From: nvidia/cuda:11.2.2-devel-ubuntu20.04
   make -j10 install
 
   # bayes-filters-lib
+  cd /src
   git clone https://github.com/xenvre/bayes-filters-lib
   cd bayes-filters-lib
   git checkout of-aided-tracking
@@ -132,6 +132,7 @@ From: nvidia/cuda:11.2.2-devel-ubuntu20.04
   make -j10 install
 
   # nanoflann
+  cd /src
   git clone https://github.com/jlblancoc/nanoflann
   cd nanoflann
   mkdir build
@@ -158,13 +159,18 @@ From: nvidia/cuda:11.2.2-devel-ubuntu20.04
   # cmake -DCMAKE_INSTALL_PREFIX=/src/robotology-superbuild/build/install -DUSE_SUPERIMPOSE=ON ../
   # make -j10 install
 
-  # optical-flow-6d-tracking-code
-  # cd /src
-  # git clone https://github.com/robotology/optical-flow-6d-tracking-code
-  # cd optical-flow-6d-tracking-code
-  # mkdir build
-  # cd build
-  # cmake -DCMAKE_INSTALL_PREFIX=/src/robotology-superbuild/build/install ./
+  optical-flow-6d-tracking-code
+  cd /src
+  git clone https://github.com/robotology/optical-flow-6d-tracking-code
+  cd optical-flow-6d-tracking-code
+  mkdir build
+  cd build
+  cmake ../
+  make -j10
+  cd /src/optical-flow-6d-tracking-code
+  virtualenv env
+  . env/bin/activate
+  pip install -r requirements
 
 %runscript
   # activate the venvwrapper
