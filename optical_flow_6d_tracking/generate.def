@@ -49,21 +49,6 @@ From: nvidia/cuda:11.2.2-devel-ubuntu20.04
   # install commonly used editors
   apt install -y emacs-nox nano vim
 
-  # (continued) vscode
-  wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
-  install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
-  sh -c 'echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
-  apt update
-  apt install -y code
-  mkdir -p /run/user/1000
-
-  # (continued) pycharm-ce
-  wget https://download.jetbrains.com/python/pycharm-community-2020.3.3.tar.gz?_ga=2.51413417.1041878853.1613757440-1036511819.1613757440 -O /opt/pycharm.tar.gz
-  cd /opt
-  tar xzf pycharm.tar.gz
-  rm pycharm.tar.gz
-  mv pycharm-community-2020.3.3 pycharm
-
   # python and virtualenvs
   apt install -y python3 python3-pip
   pip3 install virtualenvwrapper
