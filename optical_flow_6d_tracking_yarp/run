@@ -1,0 +1,13 @@
+HOME_SOURCE=./home
+HOME_TARGET=/home/`whoami`
+
+cp ~/.Xauthority $HOME_SOURCE/.Xauthority
+SINGULARITY_SHELL=/bin/bash \
+singularity shell \
+    -B $HOME_SOURCE:$HOME_TARGET \
+    -B /tmp:/tmp \
+    --env PS1='\u@ubuntu20.04:\w$ ' \
+    --writable \
+    --contain \
+    --nv \
+    ubuntu20.04
