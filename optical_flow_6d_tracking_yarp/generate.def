@@ -118,7 +118,7 @@ From: nvidia/cuda:11.2.2-devel-ubuntu20.04
   git checkout of-aided-tracking
   mkdir build
   cd build
-  cmake -DCMAKE_INSTALL_PREFIX=/src/robotology-superbuild/build/install ../
+  cmake -DOpenCV_DIR=/src/opencv/build -DCMAKE_INSTALL_PREFIX=/src/robotology-superbuild/build/install ../
   make -j10 install
 
   # bayes-filters-lib
@@ -146,7 +146,7 @@ From: nvidia/cuda:11.2.2-devel-ubuntu20.04
   cd robots-io
   mkdir build
   cd build
-  cmake -DCMAKE_INSTALL_PREFIX=/src/robotology-superbuild/build/install -DUSE_YARP=ON ../
+  cmake -DOpenCV_DIR=/src/opencv/build -DCMAKE_INSTALL_PREFIX=/src/robotology-superbuild/build/install -DUSE_YARP=ON ../
   make -j10 install
 
   # object-tracking-lib
@@ -156,7 +156,7 @@ From: nvidia/cuda:11.2.2-devel-ubuntu20.04
   # cd object-tracking-lib
   # mkdir build
   # cd build
-  # cmake -DCMAKE_INSTALL_PREFIX=/src/robotology-superbuild/build/install -DUSE_SUPERIMPOSE=ON ../
+  # cmake -DOpenCV_DIR=/src/opencv/build -DCMAKE_INSTALL_PREFIX=/src/robotology-superbuild/build/install -DUSE_SUPERIMPOSE=ON ../
   # make -j10 install
 
 %runscript
