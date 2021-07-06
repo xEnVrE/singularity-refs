@@ -150,7 +150,7 @@ From: nvidia/cuda:11.2.2-devel-ubuntu20.04
   make -j10 install
 
   # object-tracking-lib
-  # apt install -y libmlpack-dev
+  apt install -y libmlpack-dev libarmadillo-dev
   # cd /src
   # git clone https://github.com/xenvre/object-tracking-lib
   # cd object-tracking-lib
