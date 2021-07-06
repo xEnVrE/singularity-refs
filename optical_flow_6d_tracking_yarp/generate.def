@@ -86,7 +86,7 @@ From: nvidia/cuda:11.2.2-devel-ubuntu20.04
   cmake -DENABLE_FAST_MATH=ON -DOPENCV_ENABLE_NONFREE=ON -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules/ -DWITH_TBB=ON -DBUILD_PERF_TESTS=OFF -DBUILD_TESTS=OFF -DOPENCV_DNN_CUDA=OFF -DWITH_CUDA=ON -DWITH_CUDNN=OFF -DCUDA_FAST_MATH=ON -DWITH_GTK_2_X=ON -DCUDA_GENERATION=Ampere ../
   make -j10
 
-  # robotology superbuild (until we require YARP support)
+  # robotology superbuild
   git config --global user.name "user"
   git config --global user.email "user@email.com"
 
