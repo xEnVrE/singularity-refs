@@ -1,0 +1,99 @@
+BootStrap: docker
+From: nvidia/cuda:10.1-devel-ubuntu18.04
+
+%environment
+  # export locales
+  export LC_ALL=en_US.UTF-8
+  export LANG=en_US.UTF-8
+  export LANGUAGE=en_US.UTF-8
+
+  # export venvwrapper
+  export WORKON_HOME=/venvs
+  export VIRTUALENVWRAPPER_PYTHON='/usr/bin/python3'
+
+%post
+  # update package index from sources list
+  apt update
+
+  # force non-interactive setup
+  export DEBIAN_FRONTEND=noninteractive
+
+  # setup locales
+  apt install -y locales
+  echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+  locale-gen en_US.utf8
+  /usr/sbin/update-locale LANG=en_US.UTF-8
+
+  export LC_ALL=en_US.UTF-8
+  export LANG=en_US.UTF-8
+  export LANGUAGE=en_US.UTF-8
+
+  # these libraries are required to provide X11/GUI facilities to clients
+  apt install -y libsm6 libxi6 libxrender1 libxtst6 libx11-xcb-dev python3-tk
+
+  # install commonly used tools
+  apt install -y build-essential git htop iputils-ping wget pybind11-dev gpg
+
+  # update CMake
+  wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
+  echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ bionic main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null
+  apt-get update
+  apt install -y cmake cmake-curses-gui
+
+  # install commonly used editors
+  apt install -y emacs-nox nano vim
+
+  # python and virtualenvs
+  apt install -y python3 python3-pip
+  pip3 install virtualenvwrapper
+  mkdir /venvs
+  chmod 777 /venvs
+
+  # upgrade
+  apt upgrade -y
+
+  # create files required to interact with tools exposed by the NVIDIA driver on the host
+  touch /etc/localtime
+  touch /usr/bin/nvidia-smi
+  touch /usr/bin/nvidia-debugdump
+  touch /usr/bin/nvidia-persistenced
+  touch /usr/bin/nvidia-cuda-mps-control
+  touch /usr/bin/nvidia-cuda-mps-server
+  mkdir -p /run/nvidia-persistenced
+  touch /run/nvidia-persistenced/socket
+
+  # robotology superbuild
+  git config --global user.name "user"
+  git config --global user.email "user@email.com"
+
+  apt install -y build-essential cmake cmake-curses-gui coinor-libipopt-dev freeglut3-dev git libace-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libdc1394-22-dev libedit-dev libeigen3-dev libgsl0-dev libjpeg-dev liblua5.1-dev libode-dev libsdl1.2-dev libtinyxml-dev libv4l-dev libxml2-dev lua5.1 portaudio19-dev qml-module-qt-labs-folderlistmodel qml-module-qt-labs-settings qml-module-qtmultimedia qml-module-qtquick-controls qml-module-qtquick-dialogs qml-module-qtquick-window2 qml-module-qtquick2 qtbase5-dev qtdeclarative5-dev qtmultimedia5-dev swig libmatio-dev libirrlicht-dev libspdlog-dev libblas-dev liblapack-dev libopencv-dev
+
+  mkdir /src
+  cd /src
+  git clone https://github.com/robotology/robotology-superbuild
+  cd /src/robotology-superbuild
+  mkdir build
+  cd build
+  cmake -DROBOTOLOGY_ENABLE_CORE=ON -DROBOTOLOGY_USES_GAZEBO=OFF -DROBOTOLOGY_USES_PYTHON=ON -DYCM_EP_ADDITIONAL_CMAKE_ARGS:STRING="-DICUB_COMPILE_BINDINGS:BOOL=ON -DCREATE_PYTHON:BOOL=ON -DENABLE_yarpmod_RGBDSensorWrapper:BOOL=ON -DENABLE_yarpmod_RGBDSensorClient:BOOL=ON -DENABLE_yarpcar_mjpeg:BOOL=ON" ../
+  make -j10
+
+  cd /src
+  git clone https://github.com/robotology-playground/ycb-pretrained-cv-models
+
+  cd /src/ycb-pretrained-cv-models/detectron2
+  virtualenv env_detectron2
+  . env_detectron2/bin/activate
+  pip install torch==1.6.0 torchvision==0.7.0 imgaug==0.4.0
+  python -m pip install detectron2 -f https://dl.fbaipublicfiles.com/detectron2/wheels/cu101/torch1.6/index.html
+
+  cd /src/ycb-pretrained-cv-models/dope
+  virtualenv env_dope
+  . env_dope/bin/activate
+  pip install pyrr==0.10.3 torch==1.6.0 torchvision==0.7.0 numpy==1.17.4 scipy==1.5.2 opencv_python==4.4.0.44 Pillow==7.2.0 configparser==5.0.0 pyyaml yacs
+  git clone https://github.com/NVlabs/Deep_Object_Pose
+  cd Deep_Object_Pose
+  git checkout 7c826bcac42c60aeb2e5e20bbc92ff18dcf625b1
+
+%runscript
+  # activate the venvwrapper
+  source /usr/local/bin/virtualenvwrapper.sh

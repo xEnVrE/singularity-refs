@@ -1,0 +1,9 @@
+singularity build --fakeroot --sandbox image generate.def
+
+# custom configuration for emacs
+mkdir -p home
+mkdir -p home/.emacs.d
+cp ./config/emacs/init.el home/.emacs.d/init.el
+
+# bashrc for aliases
+cp ./config/bash/bashrc home/.bashrc
