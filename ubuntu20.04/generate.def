@@ -15,8 +15,8 @@ From: nvidia/cuda:11.2.2-devel-ubuntu20.04
   # update package index from sources list
   apt update
 
-  # force non-interactive setup of tzdata
-  DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends tzdata
+  # force non-interactive setup
+  export DEBIAN_FRONTEND=noninteractive
 
   # setup locales
   apt install -y locales
