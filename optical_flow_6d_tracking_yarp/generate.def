@@ -38,7 +38,7 @@ From: nvidia/cuda:11.2.2-devel-ubuntu20.04
   apt install -y libsm6 libxi6 libxrender1 libxtst6 libx11-xcb-dev python3-tk
 
   # install commonly used tools
-  apt install -y build-essential git htop iputils-ping wget pybind11-dev
+  apt install -y build-essential git htop iputils-ping wget gdb
 
   # update CMake
   apt install -y apt-transport-https ca-certificates gnupg software-properties-common
@@ -83,7 +83,7 @@ From: nvidia/cuda:11.2.2-devel-ubuntu20.04
   git checkout 4.5.2
   mkdir build
   cd build
-  cmake -DENABLE_FAST_MATH=ON -DOPENCV_ENABLE_NONFREE=ON -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules/ -DWITH_TBB=ON -DBUILD_PERF_TESTS=OFF -DBUILD_TESTS=OFF -DOPENCV_DNN_CUDA=OFF -DWITH_CUDA=ON -DWITH_CUDNN=OFF -DCUDA_FAST_MATH=ON -DWITH_GTK_2_X=ON -DCUDA_GENERATION=Ampere ../
+  cmake -DOPENCV_ENABLE_NONFREE=ON -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules/ -DWITH_TBB=ON -DBUILD_PERF_TESTS=OFF -DBUILD_TESTS=OFF -DOPENCV_DNN_CUDA=OFF -DWITH_CUDA=ON -DWITH_CUDNN=OFF -DWITH_GTK_2_X=ON -DCUDA_GENERATION=Ampere ../
   make -j10
 
   # robotology superbuild
