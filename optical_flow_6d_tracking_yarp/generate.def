@@ -11,6 +11,9 @@ From: nvidia/cuda:11.2.2-devel-ubuntu20.04
   export WORKON_HOME=/venvs
   export VIRTUALENVWRAPPER_PYTHON='/usr/bin/python3'
 
+  # export lua configuration
+  export ENV LUA_CPATH=';;;/src/robotology-superbuild/build/install/lib/lua/5.1/?.so'
+
   # OpenCV
   export OpenCV_DIR=/src/opencv/build/
 
@@ -90,7 +93,9 @@ From: nvidia/cuda:11.2.2-devel-ubuntu20.04
   git config --global user.name "user"
   git config --global user.email "user@email.com"
 
-  apt install -y build-essential cmake cmake-curses-gui coinor-libipopt-dev freeglut3-dev git libace-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libdc1394-22-dev libedit-dev libeigen3-dev libgsl0-dev libjpeg-dev liblua5.1-dev libode-dev libsdl1.2-dev libtinyxml-dev libv4l-dev libxml2-dev lua5.1 portaudio19-dev qml-module-qt-labs-folderlistmodel qml-module-qt-labs-settings qml-module-qtmultimedia qml-module-qtquick-controls qml-module-qtquick-dialogs qml-module-qtquick-window2 qml-module-qtquick2 qtbase5-dev qtdeclarative5-dev qtmultimedia5-dev swig libmatio-dev libirrlicht-dev libspdlog-dev libblas-dev liblapack-dev
+  apt install -y build-essential cmake cmake-curses-gui coinor-libipopt-dev freeglut3-dev git libace-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libdc1394-22-dev libedit-dev libeigen3-dev libgsl0-dev libjpeg-dev liblua5.1-dev libode-dev libsdl1.2-dev libtinyxml-dev libv4l-dev libxml2-dev lua5.1 portaudio19-dev qml-module-qt-labs-folderlistmodel qml-module-qt-labs-settings qml-module-qtmultimedia qml-module-qtquick-controls qml-module-qtquick-dialogs qml-module-qtquick-window2 qml-module-qtquick2 qtbase5-dev qtdeclarative5-dev qtmultimedia5-dev swig libmatio-dev libirrlicht-dev libspdlog-dev libblas-dev liblapack-dev lua-posix luarocks
+
+  luarocks install luaposix
 
   cd /src
   git clone https://github.com/robotology/ycm
@@ -107,7 +112,7 @@ From: nvidia/cuda:11.2.2-devel-ubuntu20.04
   cd /src/robotology-superbuild
   mkdir build
   cd build
-  cmake -DROBOTOLOGY_ENABLE_CORE=ON -DROBOTOLOGY_USES_GAZEBO=OFF -DROBOTOLOGY_USES_PYTHON=ON -DYCM_EP_ADDITIONAL_CMAKE_ARGS:STRING="-DOpenCV_DIR=/src/opencv/build -DICUB_COMPILE_BINDINGS:BOOL=ON -DCREATE_PYTHON:BOOL=ON -DENABLE_yarpmod_RGBDSensorWrapper:BOOL=ON -DENABLE_yarpmod_RGBDSensorClient:BOOL=ON -DENABLE_yarpcar_mjpeg:BOOL=ON" ../
+  cmake -DROBOTOLOGY_ENABLE_CORE=ON -DROBOTOLOGY_USES_GAZEBO=OFF -DROBOTOLOGY_USES_PYTHON=ON -DROBOTOLOGY_USES_LUA=ON -DYCM_EP_ADDITIONAL_CMAKE_ARGS:STRING="-DOpenCV_DIR=/src/opencv/build -DICUB_COMPILE_BINDINGS:BOOL=ON -DCREATE_PYTHON:BOOL=ON -DENABLE_yarpmod_RGBDSensorWrapper:BOOL=ON -DENABLE_yarpmod_RGBDSensorClient:BOOL=ON -DENABLE_yarpcar_mjpeg:BOOL=ON" ../
   make -j10
 
   # superimpose-mesh-lib
