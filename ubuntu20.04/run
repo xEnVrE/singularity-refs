@@ -6,6 +6,7 @@ SINGULARITY_SHELL=/bin/bash \
 singularity shell \
     -B $HOME_SOURCE:$HOME_TARGET \
     -B /tmp:/tmp \
+    -B /dev/dri:/dev/dri \
     --env PS1='\u@ubuntu20.04:\w$ ' \
     --writable \
     --contain \
