@@ -1,0 +1,1 @@
+docker build -t dope_image ./dockerfiles
