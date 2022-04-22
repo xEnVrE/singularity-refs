@@ -47,6 +47,7 @@ RUN echo "(setq-default indent-tabs-mode nil)" >> /home/user/.emacs.el && \
 # Clone ROFT (contains DOPE inference utils)
 WORKDIR /home/user
 RUN git clone https://github.com/hsp-iit/roft && \
+    cd roft && \
     git checkout impl/dope_custom_dataset
 
 # Clone DOPE
